@@ -11,6 +11,8 @@ export type GeoJSONFeature = {
 };
 
 export default function MapView({ features }: { features: GeoJSONFeature[] }) {
+  if (typeof window === "undefined") return null;
+
   const mapRef = useRef<LeafletMap | null>(null);
   const hasFeatures = Array.isArray(features) && features.length > 0;
 

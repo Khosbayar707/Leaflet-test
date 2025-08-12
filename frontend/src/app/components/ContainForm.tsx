@@ -10,14 +10,11 @@ export default function ContainsForm({
   const [lng, setLng] = useState("106.875");
   const [lat, setLat] = useState("47.94");
   const [loading, setLoading] = useState(false);
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
 
   const run = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${apiBase}/query/contains?lng=${lng}&lat=${lat}`
-      );
+      const res = await fetch(`/api/query/contains?lng=${lng}&lat=${lat}`);
       const data = await res.json();
       onResult(data?.features || []);
     } catch (e) {

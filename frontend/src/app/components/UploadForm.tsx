@@ -10,7 +10,7 @@ export default function UploadForm({
 }) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
+  const apiBase = "";
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ export default function UploadForm({
     fd.append("file", file);
     setLoading(true);
     try {
-      const r = await axios.post(`${apiBase}/upload`, fd, {
+      const r = await axios.post(`${apiBase}/api/upload`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       onUploaded(r.data?.features || []);

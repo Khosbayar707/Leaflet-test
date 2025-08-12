@@ -1,26 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import UploadForm from "./components/UploadForm";
+import dynamic from "next/dynamic";
 import ContainsForm from "./components/ContainForm";
-import MapView from "./components/MapView";
+import UploadForm from "./components/UploadForm";
+
+const MapView = dynamic(() => import("./components/MapView"), { ssr: false });
 
 export default function Page() {
   const [features, setFeatures] = useState<any[]>([]);
   const [status, setStatus] = useState<string>("");
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
 
   useEffect(() => {
-    fetch(`${apiBase}/health`)
+    fetch("/api/health", { cache: "no-store" })
       .then(async (r) => {
         const d = await r.json().catch(() => ({}));
         setStatus(d?.ok ? `PostGIS: ${d.postgis}` : "Backend unreachable");
       })
       .catch(() => setStatus("Backend unreachable"));
-  }, [apiBase]);
+  }, []);
 
   const loadLayers = async () => {
-    const r = await fetch(`${apiBase}/layers`);
+    const r = await fetch("/api/layers", { cache: "no-store" });
+    if (!r.ok) {
+      setStatus("Failed to load layers");
+      return;
+    }
     const d = await r.json();
     const fs = (d?.features || []).map((x: any) => ({
       type: "Feature",
