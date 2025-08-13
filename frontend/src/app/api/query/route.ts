@@ -3,6 +3,15 @@ import { prisma } from "../../../lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+type ContainsRow = {
+  id: number;
+  name: string;
+  description: string | null;
+  properties: any;
+  geometry: string;
+};
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,15 +25,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const rows = await prisma.$queryRaw<
-      {
-        id: number;
-        name: string;
-        description: string | null;
-        properties: any;
-        geometry: string;
-      }[]
-    >`
+    const rows: ContainsRow[] = await prisma.$queryRaw<ContainsRow[]>`
       SELECT id, name, description, properties, ST_AsGeoJSON(geom) AS geometry
       FROM "KmlLayer"
       WHERE ST_Contains(
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
       )
     `;
 
-    const features = rows.map((r) => ({
+    const features = rows.map((r: ContainsRow) => ({
       id: r.id,
       name: r.name,
       description: r.description,
