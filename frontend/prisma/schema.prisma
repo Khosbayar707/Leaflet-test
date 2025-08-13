@@ -11,9 +11,10 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  extensions = [ postgis() ] 
+  url       = env("DATABASE_URL")   // pooler (6543) — апп runtime
+  directUrl = env("DIRECT_URL")     // direct (5432) — миграци
 }
+
 
 
 model KmlLayer {
