@@ -38,33 +38,37 @@ export default function Page() {
   return (
     <div className="appGrid">
       <div className="sidebar">
-        <h2 className="heading">KML Upload & Search</h2>
-        <div aria-live="polite" className="status">
-          {status}
+        <div className="panel">
+          <h2 className="heading">KML Upload & Search</h2>
+          <div aria-live="polite" className="status">
+            {status}
+          </div>
         </div>
 
-        <UploadForm onUploaded={(f) => setFeatures(f)} />
+        <div className="panel">
+          <UploadForm onUploaded={(f) => setFeatures(f)} />
+        </div>
 
-        <div className="spacerSm" />
-        <ContainsForm
-          onResult={(f) =>
-            setFeatures(
-              f.map((x) => ({
-                type: "Feature",
-                geometry: x.geometry,
-                properties: x.properties,
-              }))
-            )
-          }
-        />
-
-        <div className="spacerSm" />
-        <button className="btn" onClick={loadLayers} type="button">
-          Load last layers
-        </button>
+        <div className="panel">
+          <ContainsForm
+            onResult={(f) =>
+              setFeatures(
+                f.map((x) => ({
+                  type: "Feature",
+                  geometry: x.geometry,
+                  properties: x.properties,
+                }))
+              )
+            }
+          />
+          <div className="spacerSm" />
+          <button className="btn primary" onClick={loadLayers} type="button">
+            Load last layers
+          </button>
+        </div>
       </div>
 
-      <div>
+      <div className="panel">
         <MapView features={features} />
       </div>
     </div>
